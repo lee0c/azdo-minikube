@@ -1,0 +1,36 @@
+{
+    "id": "f8fc2066-b014-434d-9444-ef4b58686dd4",
+    "name": "Minikube",
+    "friendlyName": "Minikube start",
+    "description": "Spin up a minikube cluster on the agent",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Lee Cattarin",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "minikube start",
+    "inputs": [
+        {
+            "name": "k8sversion",
+            "type": "string",
+            "label": "Kubernetes Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Version of Kubernetes for the cluster"
+        },
+        {
+            "name": "minikubeversion",
+            "type": "string",
+            "label": "Minikube Version",
+            "defaultValue": ""
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
