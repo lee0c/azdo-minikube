@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
@@ -10,10 +5,24 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- bash: |
+    curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64
+    curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64.sha256
+    expected=$(cat minikube.sha256)
+    echo "$expected minikube" | sha256sum -c
+    chmod +x minikube
+    sudo mv minikube /usr/local/bin
+  displayName: Minikube Installer
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- bash: |
+    sudo minikube start --vm-driver=none -v=8
+    sudo chown -R $USER $HOME/.kube $HOME/.minikube
+    sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
+    minikube update-context
+  displayName: Start Minikube Cluster
+
+- task: ShellScript@2
+  inputs:
+    scriptPath: $(Build.SourcesDirectory)/pipeline/check-cluster.sh
+  displayName: Wait for cluster to be up
+  timeoutInMinutes: 1
