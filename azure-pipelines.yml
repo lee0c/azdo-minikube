@@ -6,8 +6,8 @@ pool:
 
 steps:
 - bash: sudo apt install socat ebtables
-  displayname: Misc install
-  
+  displayName: Misc install
+
 - bash: |
     curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64
     curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64.sha256
