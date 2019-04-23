@@ -4,8 +4,7 @@ import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 async function installMinikube() {
     let prereqs: Array<string> = ["socat", "ebtables"];
     let minikubeName: string = "minikube";
-    let shaSuffix: string = ".sha256"
-    let minikubeUrl: string = "minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64";
+    let minikubeUrl: string = "https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64";
 
     let apt: ToolRunner = tl.tool(tl.which('apt', true));
     apt.arg("install").arg(prereqs);
@@ -15,8 +14,8 @@ async function installMinikube() {
     curl.arg("-Lo").arg(minikubeName).arg(minikubeUrl);
     await curl.exec();
 
-    curl.arg("-Lo").arg(minikubeName + shaSuffix).arg(minikubeUrl + shaSuffix);
-    await curl.exec();
+    let chmod: ToolRunner = tl.tool(tl.which('chmod', true));
+    chmod.arg("+x").arg(minikubeName);
 }
 
 async function run() {
