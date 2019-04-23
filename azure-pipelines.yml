@@ -18,7 +18,7 @@ steps:
   displayName: Minikube Installer
 
 - bash: |
-    sudo minikube start --vm-driver=none -v=8 --extra-config kubeadm.ignore-preflight-errors=SystemVerification
+    sudo minikube start --vm-driver=none -v=0 --extra-config kubeadm.ignore-preflight-errors=SystemVerification
     sudo chown -R $USER $HOME/.kube $HOME/.minikube
     sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
     minikube update-context
