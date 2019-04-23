@@ -41,9 +41,12 @@ jobs:
     displayName: 'npm install'
     inputs:
       command: install
+    workingDirectory: $(Build.SourcesDirectory)
   
   - bash: npm run compile
     displayName: 'tsc to js'
+    workingDirectory: $(Build.SourcesDirectory)
 
   - bash: node ./buildAndReleaseTask/index.js
     displayName: run task
+    workingDirectory: $(Build.SourcesDirectory)
