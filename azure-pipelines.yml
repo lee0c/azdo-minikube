@@ -1,31 +1,49 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'Ubuntu-16.04'
+jobs:
+- job: direct
+  displayName: Minikube install via bash
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  steps:
+  - bash: sudo apt install socat ebtables
+    displayName: Misc install
 
-steps:
-- bash: sudo apt install socat ebtables
-  displayName: Misc install
+  - bash: |
+      curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64
+      curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64.sha256
+      expected=$(cat minikube.sha256)
+      echo "$expected minikube" | sha256sum -c
+      chmod +x minikube
+      sudo mv minikube /usr/local/bin
+    displayName: Minikube Installer
 
-- bash: |
-    curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64
-    curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v1.0.0/minikube-linux-amd64.sha256
-    expected=$(cat minikube.sha256)
-    echo "$expected minikube" | sha256sum -c
-    chmod +x minikube
-    sudo mv minikube /usr/local/bin
-  displayName: Minikube Installer
+  - bash: |
+      sudo minikube start --vm-driver=none -v=0 --extra-config kubeadm.ignore-preflight-errors=SystemVerification
+      sudo chown -R $USER $HOME/.kube $HOME/.minikube
+      sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
+      minikube update-context
+    displayName: Start Minikube Cluster
 
-- bash: |
-    sudo minikube start --vm-driver=none -v=0 --extra-config kubeadm.ignore-preflight-errors=SystemVerification
-    sudo chown -R $USER $HOME/.kube $HOME/.minikube
-    sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
-    minikube update-context
-  displayName: Start Minikube Cluster
+  - task: ShellScript@2
+    inputs:
+      scriptPath: $(Build.SourcesDirectory)/pipeline/check-cluster.sh
+    displayName: Wait for cluster to be up
+    timeoutInMinutes: 1
 
-- task: ShellScript@2
-  inputs:
-    scriptPath: $(Build.SourcesDirectory)/pipeline/check-cluster.sh
-  displayName: Wait for cluster to be up
-  timeoutInMinutes: 1
+- job: task
+  displayName: Minikube install via task
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  steps:    
+  - task: Npm@1
+    displayName: 'npm install'
+    inputs:
+      command: install
+  
+  - bash: npm run compile
+    displayName: 'tsc to js'
+
+  - bash: node ./buildAndReleaseTask/index.js
+    displayName: run task

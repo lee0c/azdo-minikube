@@ -4,7 +4,7 @@
   "description": "Spins up a Minikube cluster for use in an Azure DevOps Pipeline",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "tsc ./buildAndReleaseTask/index.ts"
   },
   "author": "",
   "license": "ISC",
