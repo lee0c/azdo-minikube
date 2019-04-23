@@ -37,16 +37,14 @@ jobs:
   pool:
     vmImage: 'Ubuntu-16.04'
   steps:    
-  - task: Npm@1
+  - bash: npm install
     displayName: 'npm install'
-    inputs:
-      command: install
-      workingDir: $(Build.SourcesDirectory)
+    workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask
   
   - bash: npm run compile
     displayName: 'tsc to js'
-    workingDirectory: $(Build.SourcesDirectory)
+    workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask
 
-  - bash: node ./buildAndReleaseTask/index.js
+  - bash: node index.js
     displayName: run task
-    workingDirectory: $(Build.SourcesDirectory)
+    workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask

@@ -4,7 +4,7 @@
   "description": "Spins up a Minikube cluster for use in an Azure DevOps Pipeline",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc ./buildAndReleaseTask/index.ts"
+    "compile": "tsc index.ts"
   },
   "author": "",
   "license": "ISC",
