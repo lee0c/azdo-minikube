@@ -6,6 +6,7 @@ jobs:
   displayName: Minikube install via bash
   pool:
     vmImage: 'Ubuntu-16.04'
+  condition: false
   steps:
   - bash: sudo apt install socat ebtables
     displayName: Misc install
@@ -45,7 +46,9 @@ jobs:
     displayName: 'tsc to js'
     workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask
 
-  - bash: node index.js
+  - bash: |
+      echo $INPUT_COMMAND
+      node index.js
     displayName: run task
     workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask
     env:
