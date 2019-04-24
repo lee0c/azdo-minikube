@@ -51,5 +51,5 @@ jobs:
       node index.js
     displayName: run task
     workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask
-    env:
-      INPUT_COMMAND: "start"
+    inputs:
+      command: start
