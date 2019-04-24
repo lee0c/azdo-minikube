@@ -48,3 +48,5 @@ jobs:
   - bash: node index.js
     displayName: run task
     workingDirectory: $(Build.SourcesDirectory)/buildAndReleaseTask
+    env:
+      INPUT_COMMAND: "start"
